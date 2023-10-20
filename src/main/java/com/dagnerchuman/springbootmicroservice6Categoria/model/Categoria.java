@@ -22,3 +22,4 @@ public class Categoria {
     private LocalDateTime fechaCreacion;
 
 }
+
