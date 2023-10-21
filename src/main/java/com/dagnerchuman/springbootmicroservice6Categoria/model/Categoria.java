@@ -13,11 +13,13 @@ public class Categoria {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(name = "nombre", length = 50, nullable = false)
     private String nombre;
 
     @Column(name = "negocio_id", nullable = false)
     private Long negocioId;
+
     @Column(name="fecha_creacion", nullable = false)
     private LocalDateTime fechaCreacion;
 
