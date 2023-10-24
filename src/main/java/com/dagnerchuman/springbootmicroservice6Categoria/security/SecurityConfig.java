@@ -1,12 +1,12 @@
 package com.dagnerchuman.springbootmicroservice6Categoria.security;
 
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -15,17 +15,19 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @EnableWebSecurity
 @Configuration
-public class SecurityConfig {
-
+public class SecurityConfig
+{
     @Value("${service.security.secure-key-username}")
     private String SECURE_KEY_USERNAME;
 
     @Value("${service.security.secure-key-password}")
     private String SECURE_KEY_PASSWORD;
 
+
+
+
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception
-    {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(
                 AuthenticationManagerBuilder.class
         );
@@ -33,14 +35,14 @@ public class SecurityConfig {
         authenticationManagerBuilder.inMemoryAuthentication()
                 .withUser(SECURE_KEY_USERNAME)
                 .password(new BCryptPasswordEncoder().encode(SECURE_KEY_PASSWORD))
-                .authorities(AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_ADMIN,ROLE_SUPERADMIN")) // Agrega ROLE_SUPERADMIN
+                .authorities(AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_ADMIN,ROLE_SUPERADMIN"))
                 .and()
                 .passwordEncoder(new BCryptPasswordEncoder());
 
         return http.antMatcher("/**")
                 .authorizeRequests()
                 .anyRequest()
-                .hasAnyRole("ADMIN", "SUPERADMIN")
+                .hasRole("ADMIN,SUPERADMIN")
                 .and()
                 .csrf()
                 .disable()
@@ -48,6 +50,7 @@ public class SecurityConfig {
                 .and()
                 .build();
     }
+
 
     @Bean
     public WebMvcConfigurer corsConfigurer()
@@ -59,7 +62,5 @@ public class SecurityConfig {
             }
         };
     }
-
-
 
 }
